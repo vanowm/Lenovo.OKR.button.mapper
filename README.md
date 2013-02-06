@@ -5,10 +5,8 @@ A simple installer for launcher (and launcher itself) that executes user selecte
 The launcher uses RunFile.ini file that stores full path to the file and optional parameters
 
 RunFile.ini example:
-
-[General]
+<pre><blockquote>[General]
 file=C:\myfile.exe
-param=-blah -a 
-
+param=-blah -a</blockquote></pre>
 
 Latest compilled binary can be downloaded from <a href="https://github.com/vanowm/Lenovo.OKR.button.mapper/blob/master/download/Lenovo_OKR_Button_Mapper.exe?raw=true">here</a>
