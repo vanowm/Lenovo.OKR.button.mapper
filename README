@@ -1,9 +1,0 @@
-Lenovo OKR (Novo) button mapper
-========================
-
-A simple launcher installer and launcher itself that executes user selected file when pressed OKR (Novo) button on Lenovo laptops
-The launcher uses RunFile.ini file that stores path to the file and optional parameters
-
-[General]
-file=C:\myfile.exe
-param=-blah -a 
