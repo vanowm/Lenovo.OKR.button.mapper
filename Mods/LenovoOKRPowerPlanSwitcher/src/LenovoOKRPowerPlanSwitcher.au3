@@ -1,13 +1,14 @@
-﻿#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
+﻿#NoTrayIcon
+#Region ;**** Directives created by AutoIt3Wrapper_GUI ****
 #AutoIt3Wrapper_Compression=4
 #AutoIt3Wrapper_Res_Fileversion=1.0.0.0
+#AutoIt3Wrapper_Res_Fileversion_AutoIncrement=p
 #AutoIt3Wrapper_Res_LegalCopyright=V@no
 #AutoIt3Wrapper_Res_SaveSource=y
 #AutoIt3Wrapper_Res_Language=1033
 #AutoIt3Wrapper_Res_Field=Description|Lenovo OKR (Novo) button power plan switcher installer
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 
-#NoTrayIcon
 #include <Constants.au3>
 #include <GUIConstantsEx.au3>
 #include <ListviewConstants.au3>
@@ -24,11 +25,10 @@ $exit = False
 $saved = IniRead($iniFile, "General", "id", "")
 $last = IniRead($iniFile, "General", "last", "")
 $selected = $saved
-$list = getList()
 $match = False
 $matchLast = False
 $current = False
-$powercfg = ""
+$list = getList()
 
 Func getList()
 	Dim $l[1]
@@ -42,7 +42,6 @@ Func getList()
 		$p = ProcessExists($foo)
 		If Not $p Then $i -= 1
 	Until Not $i
-	$powercfg = $line
 	$data = StringSplit($line, @CRLF, 1)
 	$i = 0
 	For $n = 0 To $data[0]
@@ -53,13 +52,12 @@ Func getList()
 		If UBound($line) < 4 Then
 			ReDim $line[4]
 			$line[3] = Binary("")
-		Else
-			$current = $i
 		EndIf
+		If $line[2] Then $current = $i
 		$array = $line
 		If UBound($l) < $i + 1 Then ReDim $l[$i+1]
 		$l[$i] = $line
-		If $line[0] = $selected Then $match = $i
+		If $line[0] = $saved Then $match = $i
 		If $line[0] = $last Then $matchLast = $i
 		$i += 1
 	Next
@@ -82,7 +80,6 @@ EndFunc
 
 $starter = _ProcessIdPath(_ProcessGetParent(@AutoItPID))
 If StringInStr($starter, "\Lenovo\Energy Management\utility.exe") Then
-
 	If $match = False OR ($match == $matchLast AND $match == $current) OR $current == False OR ($match == $current AND $matchLast == False) Then Exit
 	$lm = $list[$match]
 	$lml = $list[$matchLast]
@@ -105,7 +102,8 @@ Else
 EndIf
 $isAdmin = IsAdmin()
 $isReg = $reg = $dir
-$isFile = FileExists($dir & "OneKey Recovery.exe")
+$file = $dir & "OneKey Recovery.exe"
+$isFile = FileExists($file) And FileGetVersion($file) = FileGetVersion(@ScriptFullPath)
 If (Not $isReg Or Not $isFile) And Not $isAdmin Then
 	ShellExecute(@ScriptName, "", "", "runas")
 	Exit
